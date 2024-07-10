@@ -1,1 +1,138 @@
-<p>table works!</p>
+<div class="row" *ngIf="loadingInProgress">
+    <app-waiting-circle></app-waiting-circle>
+</div>
+
+<div class="row" *ngIf="!loadingInProgress">
+    <div class="mt-7">
+        <div class="w-100 bg-success">
+            <table  class="w-100 text-bg-dark align-content-center p-5" *ngIf="!noDataFound">
+                <thead class="text-xl-center">
+                    <tr class="font-semibold text-md text-white bg-custom-green text-center h-full">
+                        <td scope="col"
+                            *ngFor="let head of headArray; let i = index"
+                            [ngClass]="{
+                            'px-4 py-2 rounded-l-2xl': i === 0,
+                            'px-4 py-2 rounded-r-2xl': i === headArray.length - 1,
+                            'px-4 py-2': i !== 0 && i !== headArray.length - 1
+                            }">
+
+                            <div
+                                *ngIf="
+                                allowCheckBoxes &&
+                                head.FieldName == '' &&
+                                head.ColumnType == 'CheckBox'
+                                "
+                            >
+                                <input
+                                    type="checkbox"
+                                    class="w-4 h-4 text-green-400 bg-gray-100 border-gray-300 rounded focus:ring-custom-green dark:focus:ring-custom-green dark:ring-custom-dark-green focus:ring-2 dark:bg-gray-700 dark:border-gray-600 m-2"
+                                    [(ngModel)]="isBulkSelected"
+                                    (change)="bulckSelectChange()"
+                                    />
+                            </div>
+
+                            <div class="d-flex flex-row align-items-center">
+                                <div
+                                *ngIf="head.FieldName != '' && head.ColumnType != 'CheckBox'"
+                                >
+                                {{ head.Head }}
+                                </div>
+                                <div *ngIf="head.AllowSort ?? false" class="d-flex flex-row">
+                                <div class="ms-2 p-0">
+                                    <i
+                                    [ngClass]="{
+                                        'bi bi-caret-up-fill':
+                                        currentSortedColumn == head.Head &&
+                                        currentSortedOrder == 'ascending',
+                                        'bi bi-caret-up':
+                                        currentSortedColumn != head.Head ||
+                                        currentSortedOrder != 'ascending'
+                                    }"
+                                    (click)="sortData(head.Head, 'ascending')"
+                                    ></i>
+                                </div>
+                                <div class="p-0">
+                                    <i
+                                    [ngClass]="{
+                                        'bi bi-caret-down-fill':
+                                        currentSortedColumn == head.Head &&
+                                        currentSortedOrder == 'descending',
+                                        'bi bi-caret-down':
+                                        currentSortedColumn != head.Head ||
+                                        currentSortedOrder != 'descending'
+                                    }"
+                                    (click)="sortData(head.Head, 'descending')"
+                                    ></i>
+                                </div>
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                </thead>
+                <br/>
+                <tbody *ngFor="let item of dataArray">
+                    <tr
+                        class="font-semibold text-md text-black bg-white rounded-2xl text-center h-14 shadow-md"
+                        [ngClass]="{
+                        'bg-custom-selected-green ': item.selectedRec,
+                        'bg-white': !item.selectedRec
+                        }">
+                        <td *ngFor="let head of headArray; let i = index"
+                            [ngClass]="{
+                            'px-4 py-2  rounded-l-2xl': i === 0,
+                            'px-4 py-2  rounded-r-2xl': i === headArray.length - 1,
+                            'px-4 py-2': i !== 0 && i !== headArray.length - 1
+                            }"
+                            (dblclick)="LoadDataOnRowDoubleClick(item)">
+
+                            <div
+                                *ngIf="
+                                allowCheckBoxes &&
+                                head.FieldName == '' &&
+                                head.ColumnType == 'CheckBox' &&
+                                item['isRejecteableOrApprovableRecord']
+                                ">
+
+                                <input
+                                type="checkbox"
+                                class="w-4 h-4 text-custom-green bg-gray-100 border-gray-300 rounded focus:ring-custom-green dark:focus:ring-custom-green dark:ring-custom-dark-green focus:ring-2 dark:bg-gray-700 dark:border-gray-600 m-2"
+                                [(ngModel)]="item['selectedRec']"
+                                (change)="changeStatus()"
+                                />
+                            </div>
+
+                            <div
+                                *ngIf="head.FieldName == 'icon' && head.ColumnType == 'Icon'"
+                            >
+                                <div class="hstack gap-2">
+                                    <i class="bi {{ item[head.FieldName] }}"></i>
+                                </div>
+                            </div>
+
+                            <div *ngIf="head.ColumnType == 'Data'">
+                                {{ item[head.FieldName] }}
+                            </div>
+
+                            <div *ngIf="head.FieldName == '' && head.ColumnType == 'Action'">
+                                <div class="flex items-center gap-2 justify-end mr-5">
+                                    <button
+                                        *ngIf="allowToView"
+                                        class="btn btn-sm btn-info edit-list"
+                                        data-bs-toggle="modal"
+                                        data-bs-target="#createTask"
+                                        data-edit-id="15"
+                                        (click)="LoadDataOnRowDoubleClick(item)"
+                                        Generate="View"
+                                        ngbTooltip="View"
+                                    >
+                                        <i class="bi bi-eye-fill text-muted"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
