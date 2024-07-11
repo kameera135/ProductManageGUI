@@ -13,6 +13,22 @@ import { WaitingCircleComponent } from '../../../shared/components/waiting-circl
   styleUrl: './products.component.css'
 })
 export class ProductsComponent {
+products: any;
+loadProducts() {
+throw new Error('Method not implemented.');
+}
+nextPage() {
+throw new Error('Method not implemented.');
+}
+previousPage() {
+throw new Error('Method not implemented.');
+}
+toggleProductStatus(_t51: any) {
+throw new Error('Method not implemented.');
+}
+changeSorting(arg0: any) {
+throw new Error('Method not implemented.');
+}
 
   @Output() mobileMenuButtonClicked = new EventEmitter();
 
@@ -23,119 +39,15 @@ export class ProductsComponent {
 
   viewProductTableOptions: tableOptions = new tableOptions();
 
+  currentPage = 1;
+  pageSize = 12; // Adjust this for the desired number of products per page
+  sortBy = 'Name';
+  ascending = true;
+  totalCount = 0;
+  
+
   constructor(private router: Router) {}
 
-  viewBookingHeadArray = [
-    { Head: 'No.', FieldName: 'index', ColumnType: 'Data', AllowSort: false },
-    {
-      Head: 'Facility Name',
-      FieldName: 'facilityName',
-      ColumnType: 'Data',
-      AllowSort: true,
-    },
-    {
-      Head: 'Event Name',
-      FieldName: 'eventName',
-      ColumnType: 'Data',
-      AllowSort: true,
-    },
-    {
-      Head: 'Date & Time',
-      FieldName: 'dateTime',
-      ColumnType: 'Data',
-      AllowSort: true,
-    },
-    // {
-    //   Head: 'Status',
-    //   FieldName: 'status',
-    //   ColumnType: 'Status',
-    //   AllowSort: false,
-    // },
-    { Head: '', FieldName: '', ColumnType: 'Action', AllowSort: false },
-  ];
-
-  viewBookingDataArray = [
-    {
-      index: 1,
-      facilityName: 'Facility 01',
-      eventName: 'Event 01',
-      dateTime: '11 June 2024',
-      status: 'Pending',
-      isRejecteableOrApprovableRecord: true,
-    },
-    {
-      index: 2,
-      facilityName: 'Facility 02',
-      eventName: 'Event 02',
-      dateTime: '11 June 2024',
-      status: 'Pending',
-      isRejecteableOrApprovableRecord: true,
-    },
-    {
-      index: 3,
-      facilityName: 'Facility 03',
-      eventName: 'Event 03',
-      dateTime: '11 June 2024',
-      status: 'Pending',
-      isRejecteableOrApprovableRecord: true,
-    },
-    {
-      index: 4,
-      facilityName: 'Facility 04',
-      eventName: 'Event 04',
-      dateTime: '11 June 2024',
-      status: 'Pending',
-      isRejecteableOrApprovableRecord: true,
-    },
-    {
-      index: 5,
-      facilityName: 'Facility 05',
-      eventName: 'Event 05',
-      dateTime: '11 June 2024',
-      status: 'Pending',
-      isRejecteableOrApprovableRecord: true,
-    },
-    {
-      index: 6,
-      facilityName: 'Facility 06',
-      eventName: 'Event 06',
-      dateTime: '11 June 2024',
-      status: 'Pending',
-      isRejecteableOrApprovableRecord: true,
-    },
-    {
-      index: 7,
-      facilityName: 'Facility 07',
-      eventName: 'Event 07',
-      dateTime: '11 June 2024',
-      status: 'Pending',
-      isRejecteableOrApprovableRecord: true,
-    },
-    {
-      index: 8,
-      facilityName: 'Facility 08',
-      eventName: 'Event 08',
-      dateTime: '11 June 2024',
-      status: 'Pending',
-      isRejecteableOrApprovableRecord: true,
-    },
-    {
-      index: 9,
-      facilityName: 'Facility 09',
-      eventName: 'Event 09',
-      dateTime: '11 June 2024',
-      status: 'Pending',
-      isRejecteableOrApprovableRecord: true,
-    },
-    {
-      index: 10,
-      facilityName: 'Facility 10',
-      eventName: 'Event 10',
-      dateTime: '11 June 2024',
-      status: 'Pending',
-      isRejecteableOrApprovableRecord: true,
-    },
-  ];
 
   ngOnInit(): void{
     this.viewProductTableOptions.allowCheckbox = true;

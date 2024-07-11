@@ -40,16 +40,16 @@
                             </button>
 
                             <div class="dropdown-menu dropdown-menu-end" ngbDropdownMenu>
-                                <div class="align-items-center position-relative">
-                                    <!-- Profile Picture -->
+                                <!-- <div class="align-items-center position-relative">
+                                    Profile Picture
                                     <img class="rounded-circle header-profile-user avatar-sm img " [src]="profileImage"
                                         (error)="fallbackImage($event)" alt="User Avatar" />
-                                    <!-- Pencil Icon -->
-                                    <!-- <a (click)="changeImage($event)" type="button">
+                                    Pencil Icon
+                                    <a (click)="changeImage($event)" type="button">
                                         <i class="bi bi-pencil-fill position-absolute bottom-0 end-0 rounded-circle"
                                             style="font-size: 1rem; margin-bottom: -23px; margin-right: -2px;"></i>
-                                    </a> -->
-                                </div>
+                                    </a>
+                                </div> -->
                                 <div class="dropdown-divider"></div>
                                 <div class="dropdown-divider"></div>
                                 <a class="dropdown-item" href="javascript: void(0);" (click)="logout()">
@@ -88,14 +88,33 @@
                 </div>
             </div>
         </div>
-
-        <div class="card-body pb-3">
-            <app-table
-                *ngIf="!loadingInProgress"
-                [dataTableOptions]="viewProductTableOptions"
-                [headArray]="viewBookingHeadArray"
-                [dataArray]="viewBookingDataArray">
-            </app-table>
-        </div>
+        <div class="sorting">
+            <label>Sort by:</label>
+            <select (change)="changeSorting($event)">
+              <option value="Name">Name</option>
+              <option value="Price">Price</option>
+              <option value="IsActive">Status</option>
+            </select>
+            <button (click)="ascending = !ascending; loadProducts()">
+              {{ ascending ? 'Ascending' : 'Descending' }}
+            </button>
+          </div>
+          
+          <div class="product-grid">
+            <div class="product-card" *ngFor="let product of products">
+              <h3>{{ product.name }}</h3>
+              <p>Price: {{ product.price | currency }}</p>
+              <p>Status: {{ product.isActive ? 'Active' : 'Inactive' }}</p>
+              <button (click)="toggleProductStatus(product)">
+                {{ product.isActive ? 'Deactivate' : 'Activate' }}
+              </button>
+            </div>
+          </div>
+          
+          <div class="pagination">
+            <button (click)="previousPage()" [disabled]="currentPage === 1">Previous</button>
+            <span>Page {{ currentPage }}</span>
+            <button (click)="nextPage()" [disabled]="currentPage * pageSize >= totalCount">Next</button>
+          </div>
     </div>
 </div>
