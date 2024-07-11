@@ -1,11 +1,15 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup,ReactiveFormsModule, Validators} from '@angular/forms';
+import { Auth } from '../../../../shared/models/auth';
+import { AuthService } from '../../services/auth.service';
+import { Router } from '@angular/router';
+import { HttpClientModule } from '@angular/common/http';
 
 @Component({
   selector: 'app-login',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule],
+  imports: [CommonModule, ReactiveFormsModule, HttpClientModule],
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.css']
 })
@@ -18,7 +22,9 @@ export class LoginComponent implements OnInit {
 
   startLoginInProcess: boolean = false;
 
-  constructor(private fb: FormBuilder){}
+  credentials!: Auth;
+
+  constructor(private fb: FormBuilder, private auth: AuthService, private router: Router, ){}
   
   ngOnInit(): void{
 
@@ -38,13 +44,31 @@ export class LoginComponent implements OnInit {
 
   login() {
 
+    this.startLoginInProcess = true;
+    this.credentials = this.loginForm.value;
+
     if (this.loginForm.valid) {
       console.log(this.loginForm.value);
+
+      this.auth.login(this.credentials).subscribe({
+        next: (response: any) => {
+          const token = response.token;
+
+          localStorage.setItem('token', token);
+
+          this.router.navigate(['/products']);
+        },
+        error: (error: any) => {
+          console.error('Authentication failed:', error);
+          this.startLoginInProcess = false;
+        }
+      });
     }
   }
 
   togglePasswordVisibility() {
-    throw new Error('Method not implemented.');
+    this.hidePassword = !this.hidePassword;
+    this.visible = !this.visible;
   }
 
   getCookie(cookieName: string) {
